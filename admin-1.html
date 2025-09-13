@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tambola Admin Panel</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        min-height: 100vh;
+        color: #333;
+      }
+
+      .login-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .login-form {
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+      }
+
+      .login-form h1 {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #2c3e50;
+        font-size: 2rem;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #555;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid #ddd;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+      }
+
+      .form-group input:focus {
+        outline: none;
+        border-color: #3498db;
+      }
+
+      .login-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+      }
+
+      .login-btn:hover {
+        transform: translateY(-2px);
+      }
+
+      .login-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .error-message {
+        background: #e74c3c;
+        color: white;
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      .admin-dashboard {
+        display: none;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .dashboard-header {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 20px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      }
+
+      .dashboard-header h1 {
+        color: #2c3e50;
+        font-size: 2rem;
+      }
+
+      .logout-btn {
+        padding: 10px 20px;
+        background: #e74c3c;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background 0.3s ease;
+      }
+
+      .logout-btn:hover {
+        background: #c0392b;
+      }
+
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .dashboard-card {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      }
+
+      .dashboard-card h3 {
+        margin-bottom: 20px;
+        color: #2c3e50;
+        font-size: 1.3rem;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+      }
+
+      .form-row {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 15px;
+      }
+
+      .form-row .form-group {
+        flex: 1;
+        margin-bottom: 0;
+      }
+
+      .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+      }
+
+      .btn-success {
+        background: linear-gradient(135deg, #27ae60, #229954);
+        color: white;
+      }
+
+      .btn-danger {
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+        color: white;
+      }
+
+      .btn-warning {
+        background: linear-gradient(135deg, #f39c12, #e67e22);
+        color: white;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      }
+
+      .btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .game-controls {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+      }
+
+      .number-caller {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+      }
+
+      .number-display {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .current-number {
+        font-size: 4rem;
+        font-weight: bold;
+        color: #e74c3c;
+        margin-bottom: 10px;
+      }
+
+      .call-number-btn {
+        width: 100%;
+        padding: 20px;
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+      }
+
+      .called-numbers-display {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 10px;
+        margin-top: 15px;
+      }
+
+      .called-numbers-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .called-number-tag {
+        background: #28a745;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 0.9rem;
+        font-weight: bold;
+      }
+
+      .awards-list {
+        max-height: 300px;
+        overflow-y: auto;
+      }
+
+      .award-item {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .award-item.won {
+        background: #d4edda;
+        border-left: 4px solid #28a745;
+      }
+
+      /* Enhanced award management styles */
+      .award-details {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .award-description {
+        font-size: 0.9rem;
+        color: #666;
+        font-style: italic;
+      }
+
+      .award-amount {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .award-amount label {
+        font-weight: bold;
+        color: #333;
+      }
+
+      .award-amount input {
+        width: 80px;
+        padding: 4px 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 0.9rem;
+      }
+
+      .award-amount input:disabled {
+        background: #f5f5f5;
+        color: #666;
+      }
+
+      .award-status {
+        font-weight: bold;
+        color: #28a745;
+        min-width: 120px;
+        text-align: right;
+      }
+
+      .tickets-list {
+        max-height: 400px;
+        overflow-y: auto;
+      }
+
+      .ticket-item {
+        background: #f8f9fa;
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .ticket-item.booked {
+        background: #f8d7da;
+        border-left: 4px solid #dc3545;
+      }
+
+      .status-indicator {
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: bold;
+      }
+
+      .status-running {
+        background: #d4edda;
+        color: #155724;
+      }
+
+      .status-ended {
+        background: #f8d7da;
+        color: #721c24;
+      }
+
+      @media (max-width: 768px) {
+        .dashboard-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .dashboard-header {
+          flex-direction: column;
+          gap: 15px;
+          text-align: center;
+        }
+
+        .form-row {
+          flex-direction: column;
+        }
+
+        .game-controls {
+          justify-content: center;
+        }
+
+        .current-number {
+          font-size: 3rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Login Form -->
+    <div id="loginContainer" class="login-container">
+      <form id="loginForm" class="login-form">
+        <h1>🎯 Admin Login</h1>
+        <div
+          id="errorMessage"
+          class="error-message"
+          style="display: none"
+        ></div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" required />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" required />
+        </div>
+
+        <button type="submit" class="login-btn" id="loginBtn">Login</button>
+      </form>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard" class="admin-dashboard">
+      <div class="dashboard-header">
+        <h1>🎯 Tambola Admin Panel</h1>
+        <button id="logoutBtn" class="logout-btn">Logout</button>
+      </div>
+
+      <!-- Number Caller -->
+      <div class="number-caller">
+        <h3>Number Caller</h3>
+        <div class="number-display">
+          <div class="current-number" id="currentNumber">-</div>
+          <p>Next number to call</p>
+        </div>
+        <button id="callNumberBtn" class="btn btn-primary call-number-btn">
+          Call Next Number
+        </button>
+        <div class="called-numbers-display">
+          <strong>Called Numbers:</strong>
+          <div class="called-numbers-list" id="calledNumbersList"></div>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <!-- Game Controls -->
+        <div class="dashboard-card">
+          <h3>Game Controls</h3>
+          <div class="game-controls">
+            <button id="startGameBtn" class="btn btn-success">
+              Start Game
+            </button>
+            <button id="endGameBtn" class="btn btn-danger">End Game</button>
+            <button id="resetGameBtn" class="btn btn-warning">
+              Reset Game
+            </button>
+          </div>
+          <div style="margin-top: 20px">
+            <strong>Current Status: </strong>
+            <span id="gameStatus" class="status-indicator">Loading...</span>
+          </div>
+        </div>
+
+        <!-- Game Settings -->
+        <div class="dashboard-card">
+          <h3>Game Settings</h3>
+          <div class="form-group">
+            <label for="nextGameDate">Next Game Date & Time</label>
+            <input type="datetime-local" id="nextGameDate" />
+          </div>
+          <div class="form-group">
+            <label for="ticketLimit">Ticket Limit</label>
+            <input
+              type="number"
+              id="ticketLimit"
+              min="1"
+              max="1000"
+              value="100"
+            />
+          </div>
+          <button id="saveSettingsBtn" class="btn btn-primary">
+            Save Settings
+          </button>
+        </div>
+
+        <!-- Book Ticket -->
+        <div class="dashboard-card">
+          <h3>Book Ticket</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="ticketNumber">Ticket Number</label>
+              <input type="number" id="ticketNumber" min="1" />
+            </div>
+            <div class="form-group">
+              <label for="playerName">Player Name</label>
+              <input type="text" id="playerName" />
+            </div>
+          </div>
+          <button id="bookTicketBtn" class="btn btn-success">
+            Book Ticket
+          </button>
+        </div>
+
+        <!-- Awards Management -->
+        <div class="dashboard-card">
+          <h3>Awards Management</h3>
+          <!-- Removed add award functionality as awards are now predefined -->
+          <p style="margin-bottom: 15px; color: #666; font-style: italic">
+            Set prize amounts for predefined awards. Winners are automatically
+            detected.
+          </p>
+          <div class="awards-list" id="awardsList"></div>
+        </div>
+      </div>
+
+      <!-- Tickets Overview -->
+      <div class="dashboard-card">
+        <h3>Tickets Overview</h3>
+        <div class="tickets-list" id="ticketsList"></div>
+      </div>
+    </div>
+
+    <script type="module" src="admin.js"></script>
+  </body>
+</html>
